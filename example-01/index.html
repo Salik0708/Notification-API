@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification Example</title>
+</head>
+
+<body>
+
+  <script>
+    function showNotification() {
+      const title = "I \'m notification";
+      const options = {
+        body: "Hey mate, how r ya ? You want to catch up soon?",
+        icon: "./download.png",
+        lang: "en-CA",
+        timestamp: Date.now() + 120000, //2 mins in future
+        vibrate: [100, 200, 100], //100 miliseconds vibrate then off to 200 miliseconds then again vibrate for 100 miliseconds
+        data: {
+          prop1: 123,
+          prop2: "steve"
+        }
+      };
+
+      const notification = new Notification(title, options);
+
+      function closeNotification(notifyID, time) {
+        if (notifyID instanceof Notification) {
+          setTimeout(() => {
+            notifyID.close();
+          }, time);
+        }
+      }
+
+      closeNotification(notification, 800); // close notification after 800ms
+
+      notification.addEventListener("show", (e) => {
+        console.log("Show", e.currentTarget.data)
+      })
+
+      notification.addEventListener("close", (e) => {
+        console.log("Close", e.currentTarget.body)
+      })
+
+      notification.addEventListener("click", () => {
+        window.location.href = "https://google.com";
+      })
+    }
+
+    if (!('Notification' in window)) {
+      throw new Error('Browser doesn\'t support notifications');
+    } else {
+      if (Notification.permission === "granted") {
+        showNotification();
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            showNotification();
+          }
+        }).catch((err) => {
+          console.log(err)
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>
