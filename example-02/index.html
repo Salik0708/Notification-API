@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification Count in Title Bar</title>
+</head>
+<body>
+  <script>
+    const notifications = ["New Friend Request", "Your order has been placed for $5.00"];
+
+    showNotificationCount(notifications.length);
+
+    setTimeout(() => {
+      addNotification("dcode has subscribed to you!");
+    }, 5000);
+
+    function addNotification(notification) {
+      notifications.push(notification);
+      showNotificationCount(notifications.length);
+    }
+
+
+    function removeNotification() {
+      notifications.shift();
+      showNotificationCount(notifications.length)
+    }
+
+    function showNotificationCount(count) {
+      // Looks for: (n)
+      const pattern = /^\(\d+\)/;
+
+      if (count === 0 || pattern.test(document.title)) {
+        document.title = document.title.replace(pattern, count !== 0 ? "(" + count + ")" : "");
+      } else {
+        document.title = "(" + count + ")" + document.title
+      }
+    }
+  </script>
+</body>
+</html>
